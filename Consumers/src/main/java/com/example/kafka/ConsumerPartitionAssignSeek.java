@@ -31,6 +31,7 @@ public class ConsumerPartitionAssignSeek {
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(properties);
         TopicPartition topicPartition = new TopicPartition(topicName, 0);
         kafkaConsumer.assign(List.of(topicPartition));
+        kafkaConsumer.seek(topicPartition, 10L);
 
         Thread mainThread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
