@@ -38,8 +38,6 @@ public class FileEventSource implements Runnable{
                     this.filePointer = len;
                 } else if (len > this.filePointer) {
                     readAppendAndSend();
-                } else {
-                    return;
                 }
             }
         } catch (Exception e) {
