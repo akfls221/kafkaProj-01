@@ -1,4 +1,4 @@
-package com.paractice.kafka.event;
+package com.practice.kafka.event;
 
 import java.util.concurrent.ExecutionException;
 
