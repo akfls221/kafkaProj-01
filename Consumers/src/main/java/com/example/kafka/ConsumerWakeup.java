@@ -19,13 +19,14 @@ public class ConsumerWakeup {
     public static final Logger LOGGER = LoggerFactory.getLogger(ConsumerWakeup.class.getName());
 
     public static void main(String[] args) {
-        String topicName = "simple-topic";
+        String topicName = "pizza-topic";
 
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.56.101:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "group_01");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "group_01_static");
+        properties.setProperty(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, "3");
 //        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
 
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(properties);
