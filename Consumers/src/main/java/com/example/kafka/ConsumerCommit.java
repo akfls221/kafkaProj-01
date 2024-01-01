@@ -24,8 +24,7 @@ public class ConsumerCommit {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "192.168.56.101:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "group_02");
-        properties.setProperty(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "60000");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "test_02");
 
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(properties);
         kafkaConsumer.subscribe(List.of(topicName));
@@ -33,7 +32,7 @@ public class ConsumerCommit {
         Thread mainThread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             LOGGER.info("main program starts to exit by calling wakeup");
-            kafkaConsumer.wakeup();
+//            kafkaConsumer.wakeup();
 
             try {
                 mainThread.join();
@@ -42,6 +41,11 @@ public class ConsumerCommit {
             }
         }));
 
+        pollAutoCommit(kafkaConsumer);
+
+    }
+
+    private static void pollAutoCommit(KafkaConsumer<String, String> kafkaConsumer) {
         int loopCnt = 0;
         try {
             while (true) {
@@ -52,8 +56,8 @@ public class ConsumerCommit {
                 }
 
                 try {
-                    LOGGER.info("main thread is sleeping  {} ms during while loop", loopCnt * 10000);
-                    Thread.sleep(loopCnt * 10000);
+                    LOGGER.info("main thread is sleeping  {} ms during while loop", 10000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -64,6 +68,5 @@ public class ConsumerCommit {
             LOGGER.error("finally consumer is closing");
             kafkaConsumer.close();
         }
-
     }
 }
