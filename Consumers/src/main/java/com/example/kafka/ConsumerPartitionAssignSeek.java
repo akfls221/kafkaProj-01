@@ -31,7 +31,7 @@ public class ConsumerPartitionAssignSeek {
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(properties);
         TopicPartition topicPartition = new TopicPartition(topicName, 0);
         kafkaConsumer.assign(List.of(topicPartition));
-        kafkaConsumer.seek(topicPartition, 10L);
+        kafkaConsumer.seek(topicPartition, 10L); // 해당 offset이 없을 경우 처음부터 읽음
 
         Thread mainThread = Thread.currentThread();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -45,11 +45,11 @@ public class ConsumerPartitionAssignSeek {
             }
         }));
 
-        pollmanualCommit(kafkaConsumer);
+        pollmanualUnCommit(kafkaConsumer);
 
     }
 
-    private static void pollmanualCommit(KafkaConsumer<String, String> kafkaConsumer) {
+    private static void pollmanualUnCommit(KafkaConsumer<String, String> kafkaConsumer) {
         int loopCnt = 0;
         try {
             while (true) {
@@ -58,16 +58,6 @@ public class ConsumerPartitionAssignSeek {
                 for (ConsumerRecord<String, String> consumerRecord : consumerRecords) {
                     LOGGER.info("record key : {}, record value : {}, partitions : {}, recordOffset : {}", consumerRecord.key(), consumerRecord.value(), consumerRecord.partition(), consumerRecord.offset());
                 }
-
-                try {
-                    if (consumerRecords.count() > 0) {
-                        kafkaConsumer.commitSync(); //동기방식의 offset commit - 커밋 실패시 retry를 하다 결국 필요없어 졌을때 Exception을 던진다.
-                        LOGGER.info("commit sync has been called");
-                    }
-                } catch (CommitFailedException e) {
-                    LOGGER.error(e.getMessage());
-                }
-
             }
         } catch (WakeupException e) {
             LOGGER.error("wakeup exception has been called");
