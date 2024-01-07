@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class OrderSerializer implements Serializer<OrderModel> {
 
     public static final Logger logger = LoggerFactory.getLogger(OrderSerializer.class.getName());
-    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
     public byte[] serialize(String topic, OrderModel order) {
